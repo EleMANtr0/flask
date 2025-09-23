@@ -1,5 +1,19 @@
 version: "1.0"
 services:
+  db:
+    image: postgres:16
+    container_name: postgres
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
     container_name: elastic
@@ -10,14 +24,19 @@ services:
     volumes:
       - esdata1:/usr/share/elasticsearch/data
   web:
-    image: elemantro/flask_learn
+    build: .
+    restart: unless-stopped
+    env_file: .env
     command: python3 main.py
     depends_on:
       - es
+      - db
     ports:
       - 5000:5000
     volumes:
-      - ./flask learn:/opt/flask learn
+      - "./flask learn:/opt/flask learn"
 volumes:
+  pgdata:
+    driver: local
   esdata1:
     driver: local
