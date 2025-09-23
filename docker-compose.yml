@@ -1,0 +1,23 @@
+version: "1.0"
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    container_name: elastic
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+  web:
+    image: elemantro/flask_learn
+    command: python3 main.py
+    depends_on:
+      - es
+    ports:
+      - 5000:5000
+    volumes:
+      - ./flask learn:/opt/flask learn
+volumes:
+  esdata1:
+    driver: local
