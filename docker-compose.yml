@@ -1,35 +1,30 @@
-version: "1.0"
 services:
   db:
     image: postgres:16
-    container_name: postgres
+    container_name: flask_db
     env_file: .env
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - DOCKER_ENV=true
     ports:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
-    container_name: elastic
-    environment:
-      - discovery.type=single-node
-    ports:
-      - 9200:9200
-    volumes:
-      - esdata1:/usr/share/elasticsearch/data
   web:
+    container_name: flask-web
     build: .
     restart: unless-stopped
-    env_file: .env
     command: python3 main.py
+    env_file: .env
+    environment:
+      FLASK_APP: main.py
+      FLASK_ENV: development
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DB_HOST}:5432/${POSTGRES_DB}
     depends_on:
-      - es
       - db
     ports:
       - 5000:5000
@@ -37,6 +32,3 @@ services:
       - "./flask learn:/opt/flask learn"
 volumes:
   pgdata:
-    driver: local
-  esdata1:
-    driver: local

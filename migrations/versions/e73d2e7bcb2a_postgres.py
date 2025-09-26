@@ -1,8 +1,8 @@
-"""users table
+"""postgres
 
-Revision ID: 932722ebc062
+Revision ID: e73d2e7bcb2a
 Revises: 
-Create Date: 2025-08-29 01:43:57.627539
+Create Date: 2025-09-26 03:32:21.801961
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '932722ebc062'
+revision = 'e73d2e7bcb2a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=64), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
-    sa.Column('password_hash', sa.String(length=128), nullable=True),
+    sa.Column('password_hash', sa.String(length=256), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('user', schema=None) as batch_op:

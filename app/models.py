@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key = True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index = True, unique = True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index = True, unique = True)
-    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(128))
+    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     posts: so.Mapped[List["Post"]] = so.relationship(back_populates="author", cascade = "all, delete-orphan")
 
     def set_password(self, password):
