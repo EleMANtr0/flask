@@ -1,5 +1,5 @@
 # flask
-just a learning toy project
+just a learning toy project in which i learned basics of flask, http requests, learned to work with databases and used docker in few different ways
 
 docker pull elemantro/flask_learn
 
